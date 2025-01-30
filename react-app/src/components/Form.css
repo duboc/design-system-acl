@@ -1,0 +1,21 @@
+.form {
+  display: block;
+  width: 100%;
+}
+.form--primary {
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+.form--secondary {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+}
+.form--small {
+  padding: 10px;
+}
+.form--medium {
+  padding: 20px;
+}
+.form--large {
+  padding: 30px;
+}
