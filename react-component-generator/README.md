@@ -2,8 +2,6 @@
 
 A powerful AI-powered tool that generates production-ready React components using Google's Gemini AI. This application helps developers quickly create customizable, production-ready React components following modern best practices and design patterns.
 
-![React Component Generator](./assets/preview.png)
-
 ## ✨ Features
 
 ### Component Types
