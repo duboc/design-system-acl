@@ -8,11 +8,11 @@
 }
 /* Variants */
 .button--primary {
-  background-color: #007bff;
+  background-color: #00BFFF; /* XV de Piracicaba Azul Celeste */
   color: white;
 }
 .button--primary:hover {
-  background-color: #0056b3;
+  background-color: #1E90FF; /* Dodger Blue - Similar Tone */
 }
 .button--secondary {
   background-color: #6c757d;

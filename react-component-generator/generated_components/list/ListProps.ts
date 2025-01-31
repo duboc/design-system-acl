@@ -1,6 +1,7 @@
 import React from 'react';
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ListProps extends React.HTMLAttributes<HTMLUListElement> {
   variant?: 'primary' | 'secondary';
   size?: 'small' | 'medium' | 'large';
   children: React.ReactNode;
 }
+export { ListProps };

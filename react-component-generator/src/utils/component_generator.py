@@ -293,3 +293,62 @@ IMPORTANT:
         except Exception as e:
             self.logger.error(f"Component validation failed: {str(e)}")
             return False
+
+    def generate_component_svg(self, component_name: str, files: Dict[str, str]) -> str:
+        """Generate an SVG preview of the component using Gemini"""
+        try:
+            # Create a prompt for SVG generation
+            prompt = f"""Create an SVG visualization of this React component. The SVG should be a visual representation of how the component would look when rendered.
+
+Component Code:
+{files.get(f"{component_name}.tsx", "")}
+
+CSS Code:
+{files.get(f"{component_name}.css", "")}
+
+Requirements:
+1. Return ONLY the SVG code, no markdown or other text
+2. The SVG should be self-contained and include any necessary styles
+3. Use appropriate colors and styling based on the component's CSS
+4. Keep the SVG simple but representative of the component's structure
+5. Include basic interactivity states (hover, active) if defined in the CSS
+6. The SVG should be no larger than 400x400 pixels
+7. Use a viewBox to ensure proper scaling
+
+Example states to show:
+- Default state
+- Hover state (if applicable)
+- Active state (if applicable)
+- Different variants (if defined)
+- Different sizes (if defined)
+
+Return the SVG code only, no explanations or additional text."""
+
+            # Generate the SVG using Gemini
+            svg_content = self.gemini_client.generate_content(prompt)
+            
+            # Clean up the response to ensure it's valid SVG
+            svg_content = self._extract_svg_content(svg_content)
+            
+            return svg_content
+            
+        except Exception as e:
+            self.logger.error(f"SVG generation failed: {str(e)}")
+            raise
+
+    def _extract_svg_content(self, content: str) -> str:
+        """Extract and clean up SVG content from the response"""
+        # Remove markdown code blocks
+        content = re.sub(r'```[a-z]*\n', '', content)
+        content = re.sub(r'\n```', '', content)
+        
+        # Extract SVG content
+        svg_match = re.search(r'<svg.*</svg>', content, re.DOTALL)
+        if svg_match:
+            svg_content = svg_match.group(0)
+            # Clean up whitespace and formatting
+            svg_content = re.sub(r'\s+', ' ', svg_content)
+            svg_content = re.sub(r'> <', '><', svg_content)
+            return svg_content.strip()
+        
+        raise ValueError("No valid SVG content found in the response")

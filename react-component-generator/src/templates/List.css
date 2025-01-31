@@ -1,0 +1,67 @@
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.list__item {
+  padding: 0.75rem 1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Variants */
+.list--default .list__item {
+  border-bottom: 1px solid #eee;
+}
+
+.list--default .list__item:last-child {
+  border-bottom: none;
+}
+
+.list--bordered {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.list--bordered .list__item {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.list--bordered .list__item:last-child {
+  border-bottom: none;
+}
+
+.list--card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.list--card .list__item {
+  border-bottom: 1px solid #eee;
+}
+
+.list--card .list__item:last-child {
+  border-bottom: none;
+}
+
+.list--card .list__item:hover {
+  background-color: #f8f9fa;
+}
+
+/* Sizes */
+.list--small .list__item {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.list--medium .list__item {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+}
+
+.list--large .list__item {
+  padding: 1rem 1.25rem;
+  font-size: 1.125rem;
+} 

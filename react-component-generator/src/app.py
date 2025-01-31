@@ -125,6 +125,8 @@ def init_session_state():
         st.session_state.templates = None
     if 'active_tab' not in st.session_state:
         st.session_state.active_tab = "generator"
+    if 'component_svg' not in st.session_state:
+        st.session_state.component_svg = None
 
 def add_log(message: str):
     """Add a timestamped log message"""
@@ -229,7 +231,7 @@ def main():
         return
 
     # Main navigation
-    tabs = st.tabs(["🎨 Component Generator", "📚 Template Explorer", "📋 Generation Logs"])
+    tabs = st.tabs(["🎨 Component Generator", "📚 Template Explorer", "📋 Generation Logs", "🖼️ Visualization"])
 
     # Generator Tab
     with tabs[0]:
@@ -289,6 +291,7 @@ def main():
                         # Clear previous logs
                         st.session_state.logs = []
                         st.session_state.error = None
+                        st.session_state.component_svg = None
                         
                         # Log generation start
                         add_log(f"Generating component: {component_name}")
@@ -310,6 +313,19 @@ def main():
                         # Save files
                         output_dir = os.path.join('generated_components', component_name.lower())
                         save_component_files(component_files, output_dir)
+                        
+                        # Generate SVG preview
+                        with st.spinner("🎨 Generating visual preview..."):
+                            try:
+                                svg_content = component_generator.generate_component_svg(
+                                    component_name=component_name,
+                                    files=component_files
+                                )
+                                st.session_state.component_svg = svg_content
+                                add_log("Generated SVG preview")
+                            except Exception as e:
+                                st.warning(f"Could not generate SVG preview: {str(e)}")
+                                add_log(f"SVG generation failed: {str(e)}")
                         
                         # Save logs
                         save_generation_logs(component_name, st.session_state.logs)
@@ -397,6 +413,34 @@ def main():
                 st.text(log)
         else:
             st.info("No generation logs available. Generate a component to see the logs.")
+
+    # Visualization Tab
+    with tabs[3]:
+        st.markdown("## 🖼️ Component Visualization")
+        
+        if st.session_state.component_svg:
+            st.markdown("""
+            <div class="info-message">
+                Below is an AI-generated visualization of your component. This is a simplified representation showing the component's structure and states.
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Display the SVG using components.html
+            components.html(st.session_state.component_svg, height=450)
+            
+            # Add download button for the SVG
+            st.download_button(
+                label="📥 Download SVG",
+                data=st.session_state.component_svg,
+                file_name=f"{st.session_state.generated_component['name']}_preview.svg",
+                mime="image/svg+xml",
+                use_container_width=True
+            )
+        else:
+            if st.session_state.generated_component:
+                st.info("No visualization available. Try regenerating the component to create a visual preview.")
+            else:
+                st.info("Generate a component first to see its visualization here.")
 
     # Display errors if any
     if st.session_state.error:
